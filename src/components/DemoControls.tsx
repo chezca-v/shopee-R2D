@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FlaskConical, X, ChevronRight } from "lucide-react";
+import { FlaskConical, X, ChevronRight, RotateCcw } from "lucide-react";
 import type {
   Order,
   CodPathway,
@@ -87,6 +87,36 @@ export function DemoControls({ order, onTransition }: DemoControlsProps) {
 
   const setRtsStage = (stage: RtsStage) => {
     onTransition({ rts_stage: stage });
+    setOpen(false);
+  };
+
+  const resetFlows = () => {
+    const codPathway: CodPathway =
+      order.buyer_reliability_tier === "TIER_2_VOLATILE"
+        ? "DIGITAL_PAY_ROUTE"
+        : order.buyer_reliability_tier === "TIER_1_RESTRICTED"
+          ? "MICRO_HUB_ROUTE"
+          : "FRICTIONLESS_ROUTE";
+
+    onTransition({
+      cod_pathway: codPathway,
+      cod_flow_stage: COD_FLOWS[codPathway][0].stage,
+      rts_path: "UNOPENED_PRISTINE",
+      rts_stage: "AI_RTS_TRIAGE",
+    });
+    setOpen(false);
+  };
+
+  const resetDeliveryPreferences = () => {
+    onTransition({
+      preferences: {
+        availability: "",
+        preferredWindow: "",
+        receiverName: "",
+        receiverPhone: "",
+        instructions: "",
+      },
+    });
     setOpen(false);
   };
 
@@ -282,6 +312,24 @@ export function DemoControls({ order, onTransition }: DemoControlsProps) {
                   ))}
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={resetFlows}
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-neutral-200 py-2.5 text-sm font-medium text-shopee-text-primary active:bg-neutral-50"
+              >
+                <RotateCcw size={15} />
+                Reset flows
+              </button>
+
+              <button
+                type="button"
+                onClick={resetDeliveryPreferences}
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-neutral-200 py-2.5 text-sm font-medium text-shopee-text-primary active:bg-neutral-50"
+              >
+                <RotateCcw size={15} />
+                Reset delivery preferences
+              </button>
 
               <p className="text-[10px] text-shopee-text-tertiary text-center pt-2">
                 For demo purposes only — not a Shopee feature

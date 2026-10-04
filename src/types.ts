@@ -33,6 +33,15 @@ export type CodFlowStage =
 
 export type RtsPath = 'UNOPENED_PRISTINE' | 'WRONG_ITEM_COLOR' | 'DEFECTIVE_RETURN';
 
+export type R4rVerification =
+  | 'PENDING'
+  | 'VERIFIED_CHANGE_OF_MIND'
+  | 'VERIFIED_BUYER_WILLING'
+  | 'DISCREPANCY'
+  | 'SUSPECTED_TAMPERING'
+  | 'DAMAGED_INELIGIBLE';
+export type R4rDecision = '' | 'REATTEMPT' | 'LOCAL_RESALE' | 'RETURN';
+
 export type RtsStage =
   | 'AI_RTS_TRIAGE'
   | 'LOCAL_FLASH_DEALS'
@@ -105,6 +114,9 @@ export interface Order {
   cod_flow_stage: CodFlowStage;
   rts_path: RtsPath;
   rts_stage: RtsStage;
+  r4r_verification: R4rVerification;
+  r4r_buyer_willing: boolean;
+  r4r_decision: R4rDecision;
   created_at: string;
   updated_at: string;
 }

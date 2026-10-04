@@ -1,6 +1,5 @@
 import { ShopeeHeader } from '@/components/ShopeeHeader';
 import { formatTHB } from '@/lib/format';
-import { TIER_LABELS, RTS_PATH_LABELS } from '@/lib/flows';
 import type { Order, Screen } from '@/types';
 import { Truck, MessageCircle, Store, ChevronRight, Sparkles, RotateCcw } from 'lucide-react';
 
@@ -111,9 +110,9 @@ export function OrderDetailsScreen({ order, onBack, onNavigate }: OrderDetailsSc
                 <RotateCcw size={18} color="#26AA99" />
               </div>
               <div className="flex-1 text-left">
-                <p className="text-sm font-medium text-shopee-text-primary">AI RTS Triage & Diagnostics</p>
+                <p className="text-sm font-medium text-shopee-text-primary">R4R · Ready for Resale / Return</p>
                 <p className="text-xs text-shopee-text-secondary mt-0.5">
-                  {RTS_PATH_LABELS[order.rts_path]}
+                  {order.r4r_verification === 'PENDING' ? 'Delivery failed · parcel verification pending' : `Parcel status · ${(order.r4r_verification ?? 'PENDING').replace(/_/g, ' ').toLowerCase()}`}
                 </p>
               </div>
               <ChevronRight size={16} color="#ccc" />

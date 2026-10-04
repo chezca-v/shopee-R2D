@@ -98,6 +98,10 @@ export function useOrder(orderId: string | null) {
 
   const updateOrder = useCallback(
     async (id: string, patch: Partial<Order>) => {
+      // Keep the prototype interactive when the local Supabase database has not
+      // applied the latest additive migration yet. Successful updates replace
+      // this optimistic state with the canonical database row below.
+      setOrder((current) => current?.id === id ? { ...current, ...patch } : current);
       const { data, error } = await supabase
         .from('orders')
         .update(patch)
@@ -107,6 +111,8 @@ export function useOrder(orderId: string | null) {
 
       if (error) {
         console.error('Failed to update order:', error.message);
+        // Demo state remains usable in this browser session; applying the R4R
+        // migration enables persistence across reloads/devices.
         return null;
       }
       if (data) setOrder(data as Order);

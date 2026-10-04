@@ -6,6 +6,7 @@ import type {
   CodFlowStage,
   RtsPath,
   RtsStage,
+  R4rVerification,
 } from "@/types";
 import {
   COD_FLOWS,
@@ -103,6 +104,9 @@ export function DemoControls({ order, onTransition }: DemoControlsProps) {
       cod_flow_stage: COD_FLOWS[codPathway][0].stage,
       rts_path: "UNOPENED_PRISTINE",
       rts_stage: "AI_RTS_TRIAGE",
+      r4r_verification: "PENDING",
+      r4r_buyer_willing: false,
+      r4r_decision: "",
     });
     setOpen(false);
   };
@@ -256,8 +260,25 @@ export function DemoControls({ order, onTransition }: DemoControlsProps) {
 
               {/* RTS path selector */}
               <div>
+                <p className="text-xs font-medium text-shopee-text-secondary mb-1.5 uppercase tracking-wide">R4R parcel verification</p>
+                <p className="text-[10px] text-shopee-text-tertiary mb-2">Concept demo controls. Each outcome exercises a different integrity gate.</p>
+                <div className="space-y-1">
+                  {([
+                    ["PENDING", "Verification pending"],
+                    ["VERIFIED_CHANGE_OF_MIND", "Verified intact change-of-mind"],
+                    ["VERIFIED_BUYER_WILLING", "Verified, original buyer willing"],
+                    ["DISCREPANCY", "Condition or custody discrepancy"],
+                    ["SUSPECTED_TAMPERING", "Suspected tampering or substitution"],
+                    ["DAMAGED_INELIGIBLE", "Damaged or ineligible"],
+                  ] as [R4rVerification, string][]).map(([value, label]) => (
+                    <button key={value} onClick={() => onTransition({ r4r_verification: value, r4r_buyer_willing: value === "VERIFIED_BUYER_WILLING", r4r_decision: "", rts_stage: "AI_RTS_TRIAGE" })} disabled={(order.r4r_verification ?? "PENDING") === value} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border border-neutral-200 active:bg-neutral-50 disabled:opacity-40 text-left"><span className="text-sm text-shopee-text-primary">{label}</span></button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
                 <p className="text-xs font-medium text-shopee-text-secondary mb-1.5 uppercase tracking-wide">
-                  RTS Triage Path
+                  Legacy RTS path (demo)
                 </p>
                 <p className="text-[10px] text-shopee-text-tertiary mb-2">
                   Current: {RTS_PATH_LABELS[order.rts_path]}
